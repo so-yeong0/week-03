@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NOT TO DO LIST</title>
+  <style>
+    @font-face {
+      font-family: 'Pretendard-Light';
+      src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Light.woff') format('woff');
+      font-weight: 300;
+      font-style: normal;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard-Light', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background-image: url('하기싫어.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+
+    h1 {
+      margin-top: 40px;
+      font-size: 32px;
+      letter-spacing: 2px;
+      color: white;
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .input-area {
+      margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      align-items: center;
+    }
+
+    input[type="text"], input[type="date"] {
+      font-size: 16px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      width: 240px;
+    }
+
+    .emoji-buttons {
+      margin-top: 10px;
+    }
+
+    .emoji-buttons button {
+      font-size: 20px;
+      margin: 3px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+
+    .emoji-buttons button:hover {
+      transform: scale(1.2);
+    }
+
+    #box {
+      width: 320px;
+      min-height: 200px;
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    ul {
+      list-style-type: "🚫 ";
+      padding-left: 20px;
+      margin: 0;
+      margin-bottom: 20px;
+      width: 100%;
+    }
+
+    li {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .emoji-display {
+      font-size: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .emoji-display span {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>NOT TO DO LIST</h1>
+
+  <div class="input-area">
+    <input type="date" id="dateInput" value="2025-09-25" />
+    <input type="text" id="item1" value="일찍 일어나기" />
+    <input type="text" id="item2" value="과제 안 밀리기" />
+    <input type="text" id="item3" value="열심히 살기" />
+  </div>
+
+  <div class="emoji-buttons">
+    <button onclick="toggleEmoji('🛌')">🛌</button>
+    <button onclick="toggleEmoji('😴')">😴</button>
+    <button onclick="toggleEmoji('🤐')">🤐</button>
+    <button onclick="toggleEmoji('💩')">💩</button>
+    <button onclick="toggleEmoji('🧏‍♀️')">🧏‍♀️</button>
+    <button onclick="toggleEmoji('🙅🏼')">🙅🏼</button>
+    <button onclick="toggleEmoji('🤷🏻‍♀️')">🤷🏻‍♀️</button>
+  </div>
+
+  <div id="box">
+    <ul id="list"></ul>
+    <div class="emoji-display" id="emojiDisplay"></div>
+  </div>
+
+  <script>
+    const inputs = [
+      document.getElementById('item1'),
+      document.getElementById('item2'),
+      document.getElementById('item3')
+    ];
+    const dateInput = document.getElementById('dateInput');
+    const list = document.getElementById('list');
+    const emojiDisplay = document.getElementById('emojiDisplay');
+
+    function updateList() {
+      list.innerHTML = '';
+
+      const selectedDate = dateInput.value;
+      if (selectedDate) {
+        const dateLi = document.createElement('li');
+        dateLi.textContent = `📅 ${selectedDate}`;
+        dateLi.style.listStyleType = 'none';
+        dateLi.style.fontWeight = 'bold';
+        list.appendChild(dateLi);
+      }
+
+      inputs.forEach(input => {
+        const value = input.value.trim();
+        if (value !== '') {
+          const li = document.createElement('li');
+          li.textContent = value;
+          list.appendChild(li);
+        }
+      });
+    }
+
+    function toggleEmoji(emoji) {
+      const existing = [...emojiDisplay.children].find(span => span.textContent === emoji);
+      if (existing) {
+        emojiDisplay.removeChild(existing);
+      } else {
+        const span = document.createElement('span');
+        span.textContent = emoji;
+        span.addEventListener('click', () => toggleEmoji(emoji));
+        emojiDisplay.appendChild(span);
+      }
+    }
+
+    inputs.forEach(input => {
+      input.addEventListener('input', updateList);
+    });
+    dateInput.addEventListener('input', updateList);
+
+    updateList();
+  </script>
+</body>
+</html>
